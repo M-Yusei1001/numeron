@@ -1,0 +1,8 @@
+{
+    "name": "typescript-node & GitHub CLI",
+    "dockerFile": "Dockerfile",
+    "containerEnv": {
+        "WATCHPACK_POLLING": "true"
+    },
+    "remoteUser": "node"
+}
