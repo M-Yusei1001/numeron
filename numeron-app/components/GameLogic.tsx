@@ -6,6 +6,7 @@ export default function GameLogic(): React.ReactElement {
     const [answer, setAnswer] = useState<number[]>([]);
     const [input, setInput] = useState<number[]>([]);
     const [result, setResult] = useState<{ eat: number, bite: number }>({ eat: 0, bite: 0 });
+    const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
 
     /* 
     ヌメロンは3ケタの数字の数当てゲーム。
@@ -41,9 +42,19 @@ export default function GameLogic(): React.ReactElement {
 
     //キーボードクリック時の処理
     const handleNumberClick = (value: number) => {
-        if (input.length < 3) {
+        if (input.length < 3 && !input.includes(value)) {
             setInput([...input, value]);
         }
+    };
+
+    //削除ボタンクリック時の処理
+    const handleDeleteClick = () => {
+        setInput(input.slice(0, -1));
+    };
+
+    //クリアボタンクリック時の処理
+    const handleClearClick = () => {
+        setInput([]);
     };
 
     //入力した数字の判定
@@ -59,9 +70,23 @@ export default function GameLogic(): React.ReactElement {
         <div>
             <button onClick={handleInitGame} className='btn btn-primary'>Start Game</button>
             <p>Answer: <span>{answer}</span></p>
-            <Keyboard onNumberClick={handleNumberClick} clickedNumbers={input} />
             <p>Input: <span>{input}</span></p>
-            <button onClick={handleInputSubmit} className='btn btn-primary'>Submit</button>
+            <Keyboard onNumberClick={handleNumberClick} clickedNumbers={input} />
+            <button
+                onClick={handleDeleteClick}
+                className={`btn ${input.length === 0 ? 'btn-disabled' : 'btn-neutral'}`}>
+                Delete
+            </button>
+            <button
+                onClick={handleClearClick}
+                className={`btn ${input.length === 0 ? 'btn-disabled' : 'btn-error'}`}>
+                Clear
+            </button>
+            <button
+                onClick={handleInputSubmit}
+                className={`btn ${input.length === 3 ? 'btn-primary' : 'btn-disabled'}`}>
+                Submit
+            </button>
             <p>Result: <span>{result.eat} eat, {result.bite} bite</span></p>
         </div>
     );
