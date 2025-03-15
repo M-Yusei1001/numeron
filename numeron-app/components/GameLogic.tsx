@@ -1,12 +1,17 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Keyboard from './Keyboard';
+import History from './History';
+import { NumeronResult } from '../index.d';
+import { GameEndContext, GamePlayingContext } from '../app/game/page';
 
 export default function GameLogic(): React.ReactElement {
     const [answer, setAnswer] = useState<number[]>([]);
     const [input, setInput] = useState<number[]>([]);
     const [result, setResult] = useState<{ eat: number, bite: number }>({ eat: 0, bite: 0 });
-    const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
+    const [history, setHistory] = useState<NumeronResult[]>([]);
+    const { isGameEnd, setIsGameEnd } = useContext(GameEndContext);
+    const { isGamePlaying, setIsGamePlaying } = useContext(GamePlayingContext);
 
     /* 
     ヌメロンは3ケタの数字の数当てゲーム。
@@ -35,8 +40,11 @@ export default function GameLogic(): React.ReactElement {
 
     //ゲーム初期化
     const handleInitGame = () => {
+        setIsGameEnd(false);
+        setIsGamePlaying(true);
         generateAnswer();
         setInput([]);
+        setHistory([]);
         setResult({ eat: 0, bite: 0 });
     };
 
@@ -59,17 +67,25 @@ export default function GameLogic(): React.ReactElement {
 
     //入力した数字の判定
     const handleInputSubmit = () => {
-        if (input.length === 3) {
-            const { eat, bite } = checkEatBite(input);
-            setResult({ eat, bite });
-            setInput([]);
-        };
+        if (input.length < 3) {
+            return;
+        }
+        const { eat, bite } = checkEatBite(input);
+        setResult({ eat, bite });
+        if (eat === 3) {
+            setIsGameEnd(true);
+        }
+        if (history.length > 5) {
+            history.shift();
+        }
+        setHistory([...history, { number: input, eat, bite }]);
+        setInput([]);
     };
 
     return (
         <div>
-            <button onClick={handleInitGame} className='btn btn-primary'>Start Game</button>
             <p>Answer: <span>{answer}</span></p>
+            <p>Game End: <span>{isGameEnd ? 'Game End' : 'Playing'}</span></p>
             <p>Input: <span>{input}</span></p>
             <Keyboard onNumberClick={handleNumberClick} clickedNumbers={input} />
             <button
@@ -88,6 +104,7 @@ export default function GameLogic(): React.ReactElement {
                 Submit
             </button>
             <p>Result: <span>{result.eat} eat, {result.bite} bite</span></p>
+            <History numeronResult={history} />
         </div>
     );
 };
