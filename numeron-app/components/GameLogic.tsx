@@ -41,7 +41,6 @@ export default function GameLogic(): React.ReactElement {
     //ゲーム初期化
     const handleInitGame = () => {
         setIsGameEnd(false);
-        setIsGamePlaying(true);
         generateAnswer();
         setInput([]);
         setHistory([]);
