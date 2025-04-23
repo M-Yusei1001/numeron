@@ -41,10 +41,18 @@ export default function GameLogic(): React.ReactElement {
 
     //キーボードクリック時の処理
     const handleNumberClick = (value: number) => {
+        if (input.includes(value)) {
+            return
+        }
         if (input.length < 3) {
             setInput([...input, value]);
         }
     };
+
+    //入力のクリア
+    const handleNumberClear = () => {
+        setInput([])
+    }
 
     //入力した数字の判定
     const handleInputSubmit = () => {
@@ -62,6 +70,7 @@ export default function GameLogic(): React.ReactElement {
             <Keyboard onNumberClick={handleNumberClick} clickedNumbers={input} />
             <p>Input: <span>{input}</span></p>
             <button onClick={handleInputSubmit} className='btn btn-primary'>Submit</button>
+            <button onClick={handleNumberClear} className='btn btn-secondary btn-outline'>Clear</button>
             <p>Result: <span>{result.eat} eat, {result.bite} bite</span></p>
         </div>
     );
