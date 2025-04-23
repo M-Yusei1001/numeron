@@ -5,7 +5,7 @@ interface KeyboardProps {
     clickedNumbers: number[];
 };
 
-export default function Keyboard({ onNumberClick, clickedNumbers }: KeyboardProps): React.ReactElement {
+export default function Keyboard({ onNumberClick, clickedNumbers }: KeyboardProps) {
     const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     return (
