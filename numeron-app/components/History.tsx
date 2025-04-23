@@ -1,7 +1,7 @@
 import React from 'react';
 import { NumeronResult } from '../index.d';
 
-export default function History({ numeronResult }: { numeronResult: NumeronResult[] }): React.ReactElement {
+export default function History({ numeronResult }: { numeronResult: NumeronResult[] }) {
 
     return (
         <div>

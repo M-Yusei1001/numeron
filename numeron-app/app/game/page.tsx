@@ -1,42 +1,28 @@
 "use client";
-import React, { createContext, useState } from 'react';
+import React from 'react';
 import GameLogic from "@/components/GameLogic";
+import { useAtom } from 'jotai';
+import { isGameOverAtom, isGamePlayingAtom } from '@/atoms/gameAtoms';
 
-export const GameEndContext = createContext<{
-    isGameEnd: boolean;
-    setIsGameEnd: React.Dispatch<React.SetStateAction<boolean>>;
-}>({
-    isGameEnd: false,
-    setIsGameEnd: () => { },
-});
+export default function Game() {
+    const [isGamePlaying, setIsGamePlaying] = useAtom(isGamePlayingAtom);
+    const [isGameOver, setIsGameOver] = useAtom(isGameOverAtom);
 
-export const GamePlayingContext = createContext<{
-    isGamePlaying: boolean;
-    setIsGamePlaying: React.Dispatch<React.SetStateAction<boolean>>;
-}>({
-    isGamePlaying: false,
-    setIsGamePlaying: () => { },
-});
-
-export default function Game(): React.ReactElement {
-    const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
-    const [isGamePlaying, setIsGamePlaying] = useState<boolean>(false);
+    const handleGameStart = () => {
+        setIsGamePlaying(true);
+        setIsGameOver(false);
+    };
 
     return (
         < div >
-            <h1>This is Game Page</h1>
-            <GameEndContext.Provider value={{ isGameEnd, setIsGameEnd }}>
-                <GamePlayingContext.Provider value={{ isGamePlaying, setIsGamePlaying }}>
-                    {isGamePlaying
-                        ?
-                        <GameLogic />
-                        :
-                        <button onClick={() => setIsGamePlaying} className='btn btn-primary'>
-                            Start Game
-                        </button>
-                    }
-                </GamePlayingContext.Provider>
-            </GameEndContext.Provider>
+            {isGamePlaying
+                ?
+                <GameLogic />
+                :
+                <button onClick={handleGameStart} className='btn btn-primary'>
+                    Start Game
+                </button>
+            }
         </div >
     )
 }

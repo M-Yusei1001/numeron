@@ -1,22 +1,25 @@
 "use client";
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Keyboard from './Keyboard';
 import History from './History';
 import { NumeronResult } from '../index.d';
-import { GameEndContext, GamePlayingContext } from '../app/game/page';
+import { useAtom } from 'jotai';
+import { isGameOverAtom, isGamePlayingAtom } from '@/atoms/gameAtoms';
 
-export default function GameLogic(): React.ReactElement {
+export default function GameLogic() {
     const [answer, setAnswer] = useState<number[]>([]);
     const [input, setInput] = useState<number[]>([]);
     const [result, setResult] = useState<{ eat: number, bite: number }>({ eat: 0, bite: 0 });
     const [history, setHistory] = useState<NumeronResult[]>([]);
-    const { isGameEnd, setIsGameEnd } = useContext(GameEndContext);
-    const { isGamePlaying, setIsGamePlaying } = useContext(GamePlayingContext);
+    const [isGameOver, setIsGameOver] = useAtom(isGameOverAtom);
+    const [isGamePlaying, setIsGamePlaying] = useAtom(isGamePlayingAtom);
 
     /* 
     ヌメロンは3ケタの数字の数当てゲーム。
     1~9の数字を使用し、重複はない。
     */
+
+    //回答の生成
     const generateAnswer = () => {
         const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         const num = numbers.sort(() => Math.random() - 0.5);
@@ -40,12 +43,18 @@ export default function GameLogic(): React.ReactElement {
 
     //ゲーム初期化
     const handleInitGame = () => {
-        setIsGameEnd(false);
         generateAnswer();
         setInput([]);
         setHistory([]);
         setResult({ eat: 0, bite: 0 });
     };
+
+    //ゲーム開始時の処理
+    useEffect(() => {
+        if (isGamePlaying) {
+            handleInitGame();
+        }
+    }, [isGamePlaying]);
 
     //キーボードクリック時の処理
     const handleNumberClick = (value: number) => {
@@ -72,7 +81,8 @@ export default function GameLogic(): React.ReactElement {
         const { eat, bite } = checkEatBite(input);
         setResult({ eat, bite });
         if (eat === 3) {
-            setIsGameEnd(true);
+            setIsGameOver(true);
+            // setIsGamePlaying(false);
         }
         if (history.length > 5) {
             history.shift();
@@ -84,7 +94,7 @@ export default function GameLogic(): React.ReactElement {
     return (
         <div>
             <p>Answer: <span>{answer}</span></p>
-            <p>Game End: <span>{isGameEnd ? 'Game End' : 'Playing'}</span></p>
+            <p>Game End: <span>{isGameOver ? 'Game End' : 'Playing'}</span></p>
             <p>Input: <span>{input}</span></p>
             <Keyboard onNumberClick={handleNumberClick} clickedNumbers={input} />
             <button
