@@ -1,18 +1,20 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import Keyboard from './Keyboard';
-import History from './History';
-import { NumeronResult } from '../index.d';
-import { useAtom } from 'jotai';
-import { isGameOverAtom, isGamePlayingAtom } from '@/atoms/gameAtoms';
+import React, { useEffect, useState } from "react";
+import Keyboard from "./Keyboard";
+import History from "./History";
+import { NumeronResult } from "../lib";
+import { useAtom } from "jotai";
+import { isGameOverAtom } from "@/atoms/gameAtoms";
 
 export default function GameLogic() {
     const [answer, setAnswer] = useState<number[]>([]);
     const [input, setInput] = useState<number[]>([]);
-    const [result, setResult] = useState<{ eat: number, bite: number }>({ eat: 0, bite: 0 });
+    const [result, setResult] = useState<{ eat: number; bite: number }>({
+        eat: 0,
+        bite: 0,
+    });
     const [history, setHistory] = useState<NumeronResult[]>([]);
     const [isGameOver, setIsGameOver] = useAtom(isGameOverAtom);
-    const [isGamePlaying, setIsGamePlaying] = useAtom(isGamePlayingAtom);
 
     /* 
     ヌメロンは3ケタの数字の数当てゲーム。
@@ -51,10 +53,10 @@ export default function GameLogic() {
 
     //ゲーム開始時の処理
     useEffect(() => {
-        if (isGamePlaying) {
+        if (!isGameOver) {
             handleInitGame();
         }
-    }, [isGamePlaying]);
+    }, [isGameOver]);
 
     //キーボードクリック時の処理
     const handleNumberClick = (value: number) => {
@@ -91,29 +93,53 @@ export default function GameLogic() {
         setInput([]);
     };
 
+    const handlePlayAgain = () => {
+        setIsGameOver(false);
+    };
+
     return (
         <div>
-            <p>Answer: <span>{answer}</span></p>
-            <p>Game End: <span>{isGameOver ? 'Game End' : 'Playing'}</span></p>
-            <p>Input: <span>{input}</span></p>
+            <p>
+                Answer: <span>{answer}</span>
+            </p>
+            <p>
+                Game End: <span>{isGameOver ? "Game End" : "Playing"}</span>
+            </p>
+            <p>
+                Input: <span>{input}</span>
+            </p>
             <Keyboard onNumberClick={handleNumberClick} clickedNumbers={input} />
             <button
                 onClick={handleDeleteClick}
-                className={`btn ${input.length === 0 ? 'btn-disabled' : 'btn-neutral'}`}>
+                className={`btn ${input.length === 0 ? "btn-disabled" : "btn-neutral"}`}
+            >
                 Delete
             </button>
             <button
                 onClick={handleClearClick}
-                className={`btn ${input.length === 0 ? 'btn-disabled' : 'btn-error'}`}>
+                className={`btn ${input.length === 0 ? "btn-disabled" : "btn-error"}`}
+            >
                 Clear
             </button>
             <button
                 onClick={handleInputSubmit}
-                className={`btn ${input.length === 3 ? 'btn-primary' : 'btn-disabled'}`}>
+                className={`btn ${input.length === 3 ? "btn-primary" : "btn-disabled"}`}
+            >
                 Submit
             </button>
-            <p>Result: <span>{result.eat} eat, {result.bite} bite</span></p>
+            <button
+                onClick={handlePlayAgain}
+                className={`btn ${isGameOver ? "btn-success" : "btn-disabled"}`}
+            >
+                Play Again
+            </button>
+            <p>
+                Result:{" "}
+                <span>
+                    {result.eat} eat, {result.bite} bite
+                </span>
+            </p>
             <History numeronResult={history} />
         </div>
     );
-};
+}
