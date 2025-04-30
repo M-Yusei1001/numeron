@@ -14,7 +14,7 @@ export default function Game() {
 	};
 
 	return (
-		<div>
+		<div className="flex flex-col items-center justify-center w-full mx-auto h-screen">
 			{isGamePlaying ? (
 				<GameLogic />
 			) : (
