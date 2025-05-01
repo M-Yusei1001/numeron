@@ -8,3 +8,8 @@ export interface KeyboardProps {
     onNumberClick: (value: number) => void;
     clickedNumbers: number[];
 }
+
+export type NumeronStandings = {
+    username: string;
+    score: number;
+}
