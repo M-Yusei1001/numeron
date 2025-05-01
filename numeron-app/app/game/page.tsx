@@ -1,8 +1,8 @@
 "use client";
-import React from "react";
+import { isGameOverAtom, isGamePlayingAtom } from "@/atoms/gameAtoms";
 import GameLogic from "@/components/GameLogic";
 import { useAtom } from "jotai";
-import { isGameOverAtom, isGamePlayingAtom } from "@/atoms/gameAtoms";
+import React from "react";
 
 export default function Game() {
 	const [isGamePlaying, setIsGamePlaying] = useAtom(isGamePlayingAtom);
@@ -18,7 +18,7 @@ export default function Game() {
 			{isGamePlaying ? (
 				<GameLogic />
 			) : (
-				<button onClick={handleGameStart} className="btn btn-primary">
+				<button onClick={handleGameStart} className="btn btn-primary" type="button">
 					Start Game
 				</button>
 			)}

@@ -1,5 +1,5 @@
-import React from "react";
 import type { KeyboardProps } from "@/lib";
+import React from "react";
 
 export default function Keyboard({
 	onNumberClick,
@@ -17,6 +17,7 @@ export default function Keyboard({
 						key={number}
 						onClick={() => onNumberClick(number)}
 						className={`btn btn-square ${btnConfig} ${clickedNumbers.includes(number) ? "btn-primary" : ""}`}
+						type="button"
 					>
 						{number}
 					</button>

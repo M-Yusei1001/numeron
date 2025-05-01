@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Keyboard from "./Keyboard";
-import History from "./History";
-import { NumeronResult } from "../lib";
-import { useAtom } from "jotai";
 import { isGameOverAtom } from "@/atoms/gameAtoms";
+import { useAtom } from "jotai";
+import React, { useEffect, useState } from "react";
+import type { NumeronResult } from "../lib";
+import History from "./History";
+import Keyboard from "./Keyboard";
 
 export default function GameLogic() {
     const [answer, setAnswer] = useState<number[]>([]);
@@ -112,24 +112,28 @@ export default function GameLogic() {
             <button
                 onClick={handleDeleteClick}
                 className={`btn ${input.length === 0 ? "btn-disabled" : "btn-neutral"}`}
+                type="button"
             >
                 Delete
             </button>
             <button
                 onClick={handleClearClick}
                 className={`btn ${input.length === 0 ? "btn-disabled" : "btn-error"}`}
+                type="reset"
             >
                 Clear
             </button>
             <button
                 onClick={handleInputSubmit}
                 className={`btn ${input.length === 3 ? "btn-primary" : "btn-disabled"}`}
+                type="submit"
             >
                 Submit
             </button>
             <button
                 onClick={handlePlayAgain}
                 className={`btn ${isGameOver ? "btn-success" : "btn-disabled"}`}
+                type="button"
             >
                 Play Again
             </button>
